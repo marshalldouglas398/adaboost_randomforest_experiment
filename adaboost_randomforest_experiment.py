@@ -1,3 +1,4 @@
+# Imports
 import time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,8 +18,8 @@ from sklearn.metrics import jaccard_score
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import log_loss
 
-# Iris
-
+# All of the Iris Values to Average Performance Metrics
+# Iris AdaBoost
 iris_ada_time = []
 iris_ada_balanced_accuracy = []
 iris_ada_accuracy = []
@@ -27,6 +28,7 @@ iris_ada_f1 = []
 iris_ada_precision = []
 iris_ada_jaccard = []
 
+# Iris Random Forest
 iris_rf_time = []
 iris_rf_balanced_accuracy = []
 iris_rf_accuracy = []
@@ -35,22 +37,32 @@ iris_rf_f1 = []
 iris_rf_precision = []
 iris_rf_jaccard = []
 
+# Train the Iris AdaBoost Model 100 Times
 for i in range(0, 100):
+    # Build the Iris Dataset
     print("Iris dataset working. . . ")
     iris = load_iris()
     X, y = iris.data, iris.target
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33, random_state = 42)
     print("Data split successfully!")
 
+    # Create the AdaBoost Classifier
     ada = AdaBoostClassifier(n_estimators = 100, random_state = 42)
+
+    # Collect Time Statistic
     ada_start = time.time()
+
+    # Fit the AdaBoost Model
     ada.fit(X_train, y_train)
     ada_stop = time.time()
     ada_time = ada_stop - ada_start
     iris_ada_time.append(ada_time)
     print("AdaBoost Classifier trained!")
 
+    # Build the Random Forest Classifier
     rf = RandomForestClassifier(n_estimators = 100, random_state = 42)
+
+    # Collect Time Statistic
     rf_start = time.time()
     rf.fit(X_train, y_train)
     rf_stop = time.time()
@@ -58,6 +70,7 @@ for i in range(0, 100):
     iris_rf_time.append(rf_time)
     print("Random Forest Classifier trained!")
 
+    # Calculate All of the Metrics
     balanced_accuracy_ada = balanced_accuracy_score(ada.predict(X_test), y_test)
     iris_ada_balanced_accuracy.append(balanced_accuracy_ada)
     accuracy_ada = accuracy_score(ada.predict(X_test), y_test)
